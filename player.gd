@@ -1,5 +1,4 @@
 extends CharacterBody2D
-
 enum State {
 	IDLE,
 	RUNNING,
@@ -41,12 +40,7 @@ func tick_physics(state: State, delta: float) -> void:
 		State.FALL:
 			move(default_gravity, delta)
 		State.LANDING:
-			# 檢查是否有左右輸入
-			var direction := Input.get_axis("move_left", "move_right")
-			if not is_zero_approx(direction):
-				move(default_gravity, delta) # 有輸入就移動
-			else:
-				stand(delta) # 沒輸入就原地滑行煞車
+			stand(delta) # 沒輸入就原地滑行煞車
 	is_first_tick = false
 
 func move(gravity: float, delta: float) -> void:
@@ -72,7 +66,6 @@ func get_next_state(state: State) -> State:
 	if shouldjump:
 		return State.JUMP
 	var direction := Input.get_axis("move_left", "move_right")
-	var has_input := not is_zero_approx(direction)
 	var is_still := is_zero_approx(direction) and is_zero_approx(velocity.x)
 	
 	match state:
@@ -95,8 +88,6 @@ func get_next_state(state: State) -> State:
 		State.LANDING:
 			if not is_on_floor():
 				return State.FALL
-			if has_input: 
-				return State.RUNNING
 			if not animation_player.is_playing():
 				return State.IDLE
 			
