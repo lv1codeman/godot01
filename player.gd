@@ -5,6 +5,7 @@ enum State {
 	JUMP,
 	FALL,
 	LANDING,
+	WALL_SLIDING,
 }
 
 const GROUND_STATES := [State.IDLE, State.RUNNING, State.LANDING]
@@ -21,6 +22,8 @@ var is_first_tick := false
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var coyote_timer: Timer = $CoyoteTimer
 @onready var jump_request_timer: Timer = $JumpRequestTimer
+@onready var hand_checker: RayCast2D = $Graphics/HandChecker
+@onready var foot_checker: RayCast2D = $Graphics/FootChecker
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("jump"):
@@ -42,6 +45,9 @@ func tick_physics(state: State, delta: float) -> void:
 			move(default_gravity, delta)
 		State.LANDING:
 			stand(delta) # 沒輸入就原地滑行煞車
+		State.WALL_SLIDING:
+			move(default_gravity / 3, delta)
+			graphics.scale.x = get_wall_normal().x
 	is_first_tick = false
 
 func move(gravity: float, delta: float) -> void:
@@ -86,11 +92,18 @@ func get_next_state(state: State) -> State:
 		State.FALL:
 			if is_on_floor():
 				return State.LANDING if is_still else State.RUNNING
+			if is_on_wall() and hand_checker.is_colliding() and foot_checker.is_colliding():
+				return State.WALL_SLIDING
 		State.LANDING:
-			if not is_on_floor():
-				return State.FALL
+			if not is_still:
+				return State.RUNNING
 			if not animation_player.is_playing():
 				return State.IDLE
+		State.WALL_SLIDING:
+			if is_on_floor():
+				return State.IDLE
+			if not is_on_wall():
+				return State.FALL
 			
 	return state
 
@@ -120,6 +133,8 @@ func transition_state(from: State, to: State) -> void:
 		State.LANDING:
 			animation_player.play("landing")
 	
+		State.WALL_SLIDING:
+			animation_player.play("wall_sliding")
 	is_first_tick = true
 	
 	
