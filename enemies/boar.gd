@@ -26,7 +26,7 @@ func tick_physics(state: State, delta: float) -> void:
 			
 		State.RUN:
 			if wall_checker.is_colliding() or not floor_checker.is_colliding():
-				direction *= -1
+				direction = (direction * -1) as Direction
 			move(max_speed, delta)
 			if can_see_player():
 				calm_down_timer.start()
@@ -62,13 +62,13 @@ func transition_state(from: State, to: State) -> void:
 			animation_player.play("idle")
 			# 如果遇到牆壁，野豬轉身
 			if wall_checker.is_colliding():
-				direction *= -1
+				direction = (direction * -1) as Direction
 	
 		State.WALK:
 			animation_player.play("walk")
 			# 如果腳下為空，遇到懸崖，野豬轉身
 			if not floor_checker.is_colliding():
-				direction *= -1
+				direction = (direction * -1) as Direction
 				floor_checker.force_raycast_update() # 轉身之後若沒有強制更新，野豬的rayCast仍會回傳碰到懸崖
 			
 		State.RUN:
