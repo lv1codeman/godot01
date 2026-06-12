@@ -376,7 +376,7 @@ layer_2/name = "Foreground"
 layer_2/tile_data = PackedInt32Array(655357, 524288, 3, 720907, 524288, 2, 720908, 524288, 2, 17, 393216, 3, -196599, 393216, 3, -65525, 393216, 3, -524291, 524288, 2, -524290, 524288, 2, -655342, 589824, 2, -1048578, 589824, 3, -1048577, 589824, 2, -1114111, 524288, 2, -1114106, 524288, 2, -1376253, 393216, 3, -1376251, 524288, 2, -1376249, 524288, 2, -1376248, 524288, 3, -1376243, 524288, 3, -1376242, 589824, 2, -1376236, 393216, 3, -1376235, 393216, 3, -1376229, 524288, 2, 655358, 655360, 2, 655356, 524288, 2, 589824, 524288, 2)
 
 [node name="Player" parent="." unique_id=1356952154 instance=ExtResource("2_fj7yv")]
-position = Vector2(7, 101)
+position = Vector2(612, 31)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1393333538]
 position = Vector2(0, -14)
@@ -459,3 +459,6 @@ region_rect = Rect2(112, 0, 96, 256)
 
 [node name="Boar" parent="." unique_id=1714052702 instance=ExtResource("6_dwbse")]
 position = Vector2(181, 109)
+
+[node name="Boar2" parent="." unique_id=1237061207 instance=ExtResource("6_dwbse")]
+position = Vector2(855, 31)
