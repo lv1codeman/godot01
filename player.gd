@@ -76,7 +76,7 @@ func move(gravity: float, delta: float) -> void:
 func stand(gravity: float, delta: float) -> void:
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	velocity.x = move_toward(velocity.x, 0.0, acceleration * delta)
-	velocity.y += default_gravity * delta
+	velocity.y += gravity * delta
 	move_and_slide()
 
 func can_wall_slide() -> bool:
@@ -132,11 +132,11 @@ func get_next_state(state: State) -> State:
 
 
 func transition_state(from: State, to: State) -> void:
-	print("[%s] %s => %s" %[
-		Engine.get_physics_frames(),
-		State.keys()[from] if from != -1 else "<START>",
-		State.keys()[to],
-	])
+	#print("[%s] %s => %s" %[
+		#Engine.get_physics_frames(),
+		#State.keys()[from] if from != -1 else "<START>",
+		#State.keys()[to],
+	#])
 	if from not in GROUND_STATES and to in GROUND_STATES:
 		coyote_timer.stop()
 	
