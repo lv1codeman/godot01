@@ -74,7 +74,7 @@ func tick_physics(state: State, delta: float) -> void:
 		State.LANDING:
 			stand(default_gravity, delta) # 沒輸入就原地滑行煞車
 		State.WALL_SLIDING:
-			move(default_gravity / 3, delta)
+			move(default_gravity / 4, delta)
 			graphics.scale.x = get_wall_normal().x
 		State.WALL_JUMP:
 			if state_machine.state_time < 0.1:
@@ -91,7 +91,8 @@ func tick_physics(state: State, delta: float) -> void:
 func move(gravity: float, delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
-	velocity.x = move_toward(velocity.x, direction * RUN_SPEED, acceleration * delta)
+	#velocity.x = move_toward(velocity.x, direction * RUN_SPEED, acceleration * delta)
+	velocity.x = direction * RUN_SPEED
 	velocity.y += gravity * delta
 	
 	if not is_zero_approx(direction):

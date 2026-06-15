@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://b1i4lbca0l7fs" path="res://assets/Legacy-Fantasy - High Forest 2.3/Mob/Boar/Hit-Vanish/Hit-Sheet.png" id="3_imo2m"]
 [ext_resource type="Texture2D" uid="uid://dhjerpsewya2f" path="res://assets/Legacy-Fantasy - High Forest 2.3/Mob/Boar/Walk/Walk-Base-Sheet.png" id="4_iippf"]
 [ext_resource type="Texture2D" uid="uid://bymoioyg02uxa" path="res://assets/Legacy-Fantasy - High Forest 2.3/Mob/Boar/Run/Run-Sheet.png" id="4_imo2m"]
-[ext_resource type="PackedScene" uid="uid://d3xcmejy4cyqd" path="res://ui/status_panel.tscn" id="7_qb4tn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iippf"]
 size = Vector2(23, 24)
@@ -543,12 +542,5 @@ one_shot = true
 
 [node name="Stats" parent="." index="5" unique_id=775528941]
 max_health = 5
-
-[node name="StatusPanel" parent="." index="6" unique_id=911111540 node_paths=PackedStringArray("stats") instance=ExtResource("7_qb4tn")]
-offset_left = -44.0
-offset_top = -56.0
-offset_right = 44.0
-offset_bottom = -30.0
-stats = NodePath("../Stats")
 
 [connection signal="hurt" from="Graphics/Hurtbox" to="." method="_on_hurtbox_hurt"]
