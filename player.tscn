@@ -12,13 +12,13 @@
 size = Vector2(12, 29)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b26j0"]
-size = Vector2(32, 14)
+size = Vector2(19, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n7ghd"]
-size = Vector2(30, 14)
+size = Vector2(10, 13)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1jxqw"]
-size = Vector2(22, 25)
+size = Vector2(13, 22)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(10, 28)
@@ -148,8 +148,8 @@ tracks/9/keys = {
 
 [sub_resource type="Animation" id="Animation_n7ghd"]
 resource_name = "attack_1"
-length = 0.6
-step = 0.1
+length = 0.5
+step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -193,7 +193,7 @@ tracks/3/path = NodePath("Graphics/Sprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.19999999, 0.29999998, 0.39999998),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5]
@@ -398,8 +398,8 @@ tracks/9/keys = {
 
 [sub_resource type="Animation" id="Animation_ivps1"]
 resource_name = "attack_3"
-length = 0.8
-step = 0.1
+length = 0.7
+step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -443,7 +443,7 @@ tracks/3/path = NodePath("Graphics/Sprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.19999999, 0.29999998, 0.39999998, 0.5, 0.59999996),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
@@ -1329,17 +1329,17 @@ script = ExtResource("5_1jxqw")
 metadata/_custom_type_script = "uid://bf0y4j8vtfpc0"
 
 [node name="AttackShape" type="CollisionShape2D" parent="Graphics/Hitbox" unique_id=1666348868]
-position = Vector2(14, -20)
+position = Vector2(23.5, -19)
 shape = SubResource("RectangleShape2D_b26j0")
 disabled = true
 
 [node name="AttackShape2" type="CollisionShape2D" parent="Graphics/Hitbox" unique_id=1825816813]
-position = Vector2(9, -16)
+position = Vector2(19, -15.5)
 shape = SubResource("RectangleShape2D_n7ghd")
 disabled = true
 
 [node name="AttackShape3" type="CollisionShape2D" parent="Graphics/Hitbox" unique_id=624703542]
-position = Vector2(18, -18.5)
+position = Vector2(22.5, -17)
 shape = SubResource("RectangleShape2D_1jxqw")
 disabled = true
 
