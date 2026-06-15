@@ -234,11 +234,10 @@ func transition_state(from: State, to: State) -> void:
 		State.HURT:
 			animation_player.play("hurt")
 			
-			stats.health -= pending_damage.amount
+			stats.health -= pending_damage.amount # 扣血
 			var dir := pending_damage.source.global_position.direction_to(global_position)
-			velocity = dir * KNOCKBACK_AMOUNT
-				
-			pending_damage = null
+			velocity = dir * KNOCKBACK_AMOUNT # dir為擊退方向，KNOCKBACK_AMOUNT為擊退距離
+			pending_damage = null # 釋放緩存，以便下一次使用
 			invincible_timer.start()
 		State.DYING:
 			animation_player.play("die")
