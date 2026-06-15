@@ -445,6 +445,7 @@ layer_2/tile_data = PackedInt32Array(655357, 524288, 3, 720907, 524288, 2, 72090
 
 [node name="Decorations" type="Node2D" parent="." unique_id=669863267]
 metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Background" type="ParallaxBackground" parent="Decorations" unique_id=822620744]
 
