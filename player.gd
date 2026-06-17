@@ -13,6 +13,9 @@ enum State {
 	ATTACK_3,
 	HURT,
 	DYING,
+	SLIDING_START,
+	SLIDING_LOOP,
+	SLIDING_END
 }
 
 const GROUND_STATES := [
@@ -25,6 +28,8 @@ const AIR_ACCELERATION := RUN_SPEED / 0.1
 const JUMP_VELOCITY := -320.0
 const WALL_JUMP_VELOCITY := Vector2(300, -300)
 const KNOCKBACK_AMOUNT := 384.0
+const SLIDING_DURATION := 0.3
+const SLIDING_SPEED := 256.0
 
 @export var can_combo := false
 
@@ -86,6 +91,13 @@ func tick_physics(state: State, delta: float) -> void:
 			stand(default_gravity, delta)
 		State.HURT, State.DYING:
 			stand(default_gravity, delta)
+			
+		State.SLIDING_END:
+			stand(default_gravity, delta)
+			
+		State.SLIDING_START, State.SLIDING_LOOP:
+			slide(delta)
+			
 	is_first_tick = false
 
 func move(gravity: float, delta: float) -> void:
@@ -104,6 +116,11 @@ func stand(gravity: float, delta: float) -> void:
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	velocity.x = move_toward(velocity.x, 0.0, acceleration * delta)
 	velocity.y += gravity * delta
+	move_and_slide()
+
+func slide(delta: float) -> void:
+	velocity.x = graphics.scale.x * SLIDING_SPEED
+	velocity.y += default_gravity * delta
 	move_and_slide()
 
 func die() -> void:
@@ -134,11 +151,15 @@ func get_next_state(state: State) -> int:
 		State.IDLE:
 			if Input.is_action_just_pressed("attack"):
 				return State.ATTACK_1
+			if Input.is_action_just_pressed("slide"):
+				return State.SLIDING_START
 			if not is_still:
 				return State.RUNNING
 		State.RUNNING:
 			if Input.is_action_just_pressed("attack"):
 				return State.ATTACK_1
+			if Input.is_action_just_pressed("slide"):
+				return State.SLIDING_START
 			if is_still:
 				return State.IDLE
 		State.JUMP:
@@ -180,7 +201,17 @@ func get_next_state(state: State) -> int:
 		State.HURT:
 			if not animation_player.is_playing():
 				return State.IDLE
+		State.SLIDING_START:
+			if not animation_player.is_playing():
+				return State.SLIDING_LOOP
+		State.SLIDING_END:
+			if not animation_player.is_playing():
+				return State.IDLE
 				
+		State.SLIDING_LOOP:
+			if state_machine.state_time > SLIDING_DURATION:
+				return State.SLIDING_END
+		
 	return StateMachine.KEEP_CURRENT
 
 
@@ -243,6 +274,13 @@ func transition_state(from: State, to: State) -> void:
 		State.DYING:
 			animation_player.play("die")
 			invincible_timer.stop()
+		
+		State.SLIDING_START:
+			animation_player.play("sliding_start")
+		State.SLIDING_LOOP:
+			animation_player.play("sliding_loop")
+		State.SLIDING_END:
+			animation_player.play("sliding_end")
 		
 	#if to == State.WALL_JUMP:
 		#Engine.time_scale = 0.3 # 進入WALL_JUMP狀態時， 遊戲時間流速降低為0.3倍
