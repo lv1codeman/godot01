@@ -2365,6 +2365,10 @@ one_shot = true
 wait_time = 0.1
 one_shot = true
 
+[node name="SlideRequestTimer" type="Timer" parent="." unique_id=517184592]
+wait_time = 0.1
+one_shot = true
+
 [node name="InvincibleTimer" type="Timer" parent="." unique_id=709671367]
 wait_time = 2.0
 one_shot = true

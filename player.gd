@@ -30,6 +30,8 @@ const WALL_JUMP_VELOCITY := Vector2(300, -300)
 const KNOCKBACK_AMOUNT := 384.0
 const SLIDING_DURATION := 0.3
 const SLIDING_SPEED := 256.0
+const SLIDING_ENERGY := 4.0
+const LANDING_HEIGHT := 100.0
 
 @export var can_combo := false
 
@@ -37,6 +39,7 @@ var default_gravity := ProjectSettings.get("physics/2d/default_gravity") as floa
 var is_first_tick := false
 var is_combo_requested := false
 var pending_damage: Damage
+var fall_from_y: float
 
 @onready var graphics: Node2D = $Graphics
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -47,6 +50,7 @@ var pending_damage: Damage
 @onready var state_machine: StateMachine = $StateMachine
 @onready var stats: Stats = $Stats
 @onready var invincible_timer: Timer = $InvincibleTimer
+@onready var slide_request_timer: Timer = $SlideRequestTimer
 
 
 
@@ -60,6 +64,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("attack") and can_combo:
 		is_combo_requested = true
+	
+	if event.is_action_pressed("slide"):
+		slide_request_timer.start()
+	
+	
 
 func tick_physics(state: State, delta: float) -> void:
 	if invincible_timer.time_left > 0:
@@ -129,6 +138,13 @@ func die() -> void:
 func can_wall_slide() -> bool:
 	return is_on_wall() and hand_checker.is_colliding() and foot_checker.is_colliding()
 
+func should_slide() -> bool:
+	if slide_request_timer.is_stopped():
+		return false
+	if stats.energy < SLIDING_ENERGY:
+		return false
+	return not foot_checker.is_colliding()
+
 func get_next_state(state: State) -> int:
 	if stats.health == 0:
 		return	StateMachine.KEEP_CURRENT if state == State.DYING else State.DYING
@@ -151,14 +167,14 @@ func get_next_state(state: State) -> int:
 		State.IDLE:
 			if Input.is_action_just_pressed("attack"):
 				return State.ATTACK_1
-			if Input.is_action_just_pressed("slide"):
+			if should_slide():
 				return State.SLIDING_START
 			if not is_still:
 				return State.RUNNING
 		State.RUNNING:
 			if Input.is_action_just_pressed("attack"):
 				return State.ATTACK_1
-			if Input.is_action_just_pressed("slide"):
+			if should_slide():
 				return State.SLIDING_START
 			if is_still:
 				return State.IDLE
@@ -167,12 +183,11 @@ func get_next_state(state: State) -> int:
 				return State.FALL
 		State.FALL:
 			if is_on_floor():
-				return State.LANDING if is_still else State.RUNNING
+				var height := global_position.y - fall_from_y
+				return State.LANDING if height >= LANDING_HEIGHT else State.RUNNING
 			if can_wall_slide():
 				return State.WALL_SLIDING
 		State.LANDING:
-			if not is_still:
-				return State.RUNNING
 			if not animation_player.is_playing():
 				return State.IDLE
 		State.WALL_SLIDING:
@@ -209,7 +224,7 @@ func get_next_state(state: State) -> int:
 				return State.IDLE
 				
 		State.SLIDING_LOOP:
-			if state_machine.state_time > SLIDING_DURATION:
+			if state_machine.state_time > SLIDING_DURATION or is_on_wall():
 				return State.SLIDING_END
 		
 	return StateMachine.KEEP_CURRENT
@@ -241,6 +256,7 @@ func transition_state(from: State, to: State) -> void:
 			animation_player.play("fall")
 			if from in GROUND_STATES:
 				coyote_timer.start()
+			fall_from_y = global_position.y
 	
 		State.LANDING:
 			animation_player.play("landing")
@@ -277,6 +293,8 @@ func transition_state(from: State, to: State) -> void:
 		
 		State.SLIDING_START:
 			animation_player.play("sliding_start")
+			slide_request_timer.stop()
+			stats.energy -= SLIDING_ENERGY
 		State.SLIDING_LOOP:
 			animation_player.play("sliding_loop")
 		State.SLIDING_END:

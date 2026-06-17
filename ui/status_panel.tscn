@@ -28,7 +28,16 @@ region = Rect2(308, 118, 56, 4)
 atlas = ExtResource("2_7nptj")
 region = Rect2(308, 86, 56, 4)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nptj"]
+atlas = ExtResource("2_7nptj")
+region = Rect2(307, 6, 58, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uqk2t"]
+atlas = ExtResource("2_7nptj")
+region = Rect2(308, 135, 56, 2)
+
 [node name="StatusPanel" type="HBoxContainer" unique_id=911111540]
+theme_override_constants/separation = 4
 script = ExtResource("1_0jk47")
 
 [node name="AvatarBox" type="PanelContainer" parent="." unique_id=135163739]
@@ -41,7 +50,12 @@ layout_mode = 2
 texture = SubResource("AtlasTexture_q1n06")
 stretch_mode = 5
 
-[node name="HealthBar" type="TextureProgressBar" parent="." unique_id=1285208707]
+[node name="V" type="VBoxContainer" parent="." unique_id=1257585681]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="HealthBar" type="TextureProgressBar" parent="V" unique_id=1285208707]
 layout_mode = 2
 size_flags_vertical = 4
 max_value = 1.0
@@ -51,7 +65,7 @@ texture_over = SubResource("AtlasTexture_kl8nt")
 texture_progress = SubResource("AtlasTexture_21v3x")
 texture_progress_offset = Vector2(1, 1)
 
-[node name="EasedHealthBar" type="TextureProgressBar" parent="HealthBar" unique_id=1306737178]
+[node name="EasedHealthBar" type="TextureProgressBar" parent="V/HealthBar" unique_id=1306737178]
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15
@@ -64,4 +78,13 @@ max_value = 1.0
 step = 0.0
 value = 1.0
 texture_progress = SubResource("AtlasTexture_0jk47")
+texture_progress_offset = Vector2(1, 1)
+
+[node name="EnergyBar" type="TextureProgressBar" parent="V" unique_id=452832957]
+layout_mode = 2
+max_value = 1.0
+step = 0.0
+value = 1.0
+texture_over = SubResource("AtlasTexture_7nptj")
+texture_progress = SubResource("AtlasTexture_uqk2t")
 texture_progress_offset = Vector2(1, 1)
